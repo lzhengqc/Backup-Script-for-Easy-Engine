@@ -1,0 +1,31 @@
+#!/bin/sh
+echo "-------------------------"
+echo "Connecting to db"
+echo "-------------------------"
+THESITE="website.com"
+THEDB="db_name"
+THEDBUSER="db_user"
+THEDBPW="db_pass"
+THEDATE=`date +%d%m%y%H%M`
+echo "Done"
+echo "-------------------------"
+echo "Creating DB Dump"
+echo "-------------------------"
+mysqldump -u $THEDBUSER -p${THEDBPW} $THEDB | gzip > /var/www/$THESITE/backups/files/dbbackup_${THEDB}_${THEDATE}.bak.gz
+echo "Done"
+echo "-------------------------"
+echo "Preparing file backup"
+echo "-------------------------"
+tar czf /var/www/$THESITE/backups/files/sitebackup_${THESITE}_${THEDATE}.tar -C / var/www/$THESITE/htdocs
+echo "Done"
+echo "-------------------------"
+echo "Compressing files"
+echo "-------------------------"
+gzip /var/www/$THESITE/backups/files/sitebackup_${THESITE}_${THEDATE}.tar
+echo "Done"
+echo "-------------------------"
+echo " Database path => /var/www/"$THESITE"/backups/files/dbbackup_"${THEDB}"_"${THEDATE}".bak.gz"
+echo " Websites path => /var/www/"$THESITE"/backups/files/sitebackup_"${THESITE}"_"${THEDATE}".tar"
+echo "-------------------------"
+echo "Thank you!"
+echo "-------------------------"
